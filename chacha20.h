@@ -11,13 +11,12 @@ typedef struct Chacha20_ctx {
 } Chacha20_ctx;
 
 /**
-  - The key must have 8 elements.
   - You can use the same key but the nonce
   must be different each time the function
   is called.
   - Pointers must not alias.
-  - values key stream has a period of UINT64_MAX
+  - Key stream has a period of 64 * UINT64_MAX
 */
-void chacha20(Chacha20_ctx* ctx, void* out, const size_t out_len);
+void chacha20(Chacha20_ctx* ctx, void* out, const size_t out_size);
 
 #endif

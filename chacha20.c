@@ -36,6 +36,9 @@ static void chacha20_block(uint32_t* restrict x, const uint32_t* restrict const 
 void chacha20(Chacha20_ctx* restrict ctx, void* restrict out, const size_t out_size)
 {
     assert(ctx != NULL);
+    assert(out != NULL);
+
+    if (ctx == NULL || out == NULL || out_size == 0) return;
 
     uint32_t state[STATE_SIZE] = {
         [0]  = 0x61707865,   [1]  = 0x3320646e,    [2]  = 0x79622d32,    [3]  = 0x6b206574,
@@ -45,19 +48,14 @@ void chacha20(Chacha20_ctx* restrict ctx, void* restrict out, const size_t out_s
         [14] = (uint32_t)(ctx->nonce & UINT32_MAX),   [15] = (uint32_t)(ctx->nonce >> 32)
     };
 
-    size_t i = 0;
-    for (; (i + BLOCK_SIZE - 1) < out_size; i += BLOCK_SIZE) {
-        chacha20_block((uint32_t*)((uint8_t*)out + i), state);
+    uint32_t x[STATE_SIZE];
+    for (size_t i = 0; i < out_size; i += BLOCK_SIZE) {
+        chacha20_block(x, state);
         ++(ctx->counter);
         state[12] = (uint32_t)(ctx->counter & UINT32_MAX);
         state[13] = (uint32_t)(ctx->counter >> 32);
+        memcpy((uint8_t*)out + i, x, BLOCK_SIZE <= (out_size - i) ? BLOCK_SIZE : (out_size - i));
     }
-    if (i == out_size) return;
-    uint32_t x[STATE_SIZE];
-    chacha20_block(x, state);
-    assert(i < out_size);
-    assert(out_size - i <= BLOCK_SIZE);
-    memcpy((uint8_t*)out + i, x, out_size - i);
 }
 
 
