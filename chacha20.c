@@ -4,7 +4,6 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <string.h>
-#include <assert.h>
 
 #define WORD_SIZE 32
 #define STATE_SIZE 16
@@ -35,11 +34,6 @@ static void chacha20_block(uint32_t* restrict x, const uint32_t* restrict const 
 
 void chacha20(Chacha20_ctx* restrict ctx, void* restrict out, const size_t out_size)
 {
-    assert(ctx != NULL);
-    assert(out != NULL);
-
-    if (ctx == NULL || out == NULL || out_size == 0) return;
-
     uint32_t state[STATE_SIZE] = {
         [0]  = 0x61707865,   [1]  = 0x3320646e,    [2]  = 0x79622d32,    [3]  = 0x6b206574,
         [4]  = ctx->key[0],  [5]  = ctx->key[1],   [6]  = ctx->key[2],   [7]  = ctx->key[3],
