@@ -1,3 +1,7 @@
-This branch is for prng uses specifically.  This version will fail the test vectors because it
-uses a 64 bit counter and a 64 bit nonce, whereas the test vector in the main branch uses
-a 32 bit counter and a 96 bit nonce.
+My implementation of the ChaCha20 stream cipher.  This implementation does not include the
+Poly1305 authentication algorithm, as I am primarily going to use this as a csprng.
+Implementation details and test vectors were taken from:
+
+```
+https://www.rfc-editor.org/info/rfc8439/
+```
